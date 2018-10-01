@@ -3,6 +3,7 @@
 //  SmartCameraLBTA
 //
 //  Created by Brian Voong on 7/12/17.
+//  Modified by Manuel Cargnel on 02.10.2018
 //  Copyright © 2017 Lets Build That App. All rights reserved.
 //
 
@@ -27,7 +28,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     
     let fullScreenImage: UIImageView = {
         let imageView = UIImageView()
-        //imageView.backgroundColor = .green
         return imageView
     }()
     
@@ -36,8 +36,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // here is where we start up the camera
-        // for more details visit: https://www.letsbuildthatapp.com/course_video?id=1252
         let captureSession = AVCaptureSession()
         captureSession.sessionPreset = .photo
         
@@ -120,28 +118,18 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                 UIGraphicsBeginImageContext(self.view.frame.size)
                 // Draw the starting image in the current context as background
                 self.fullScreenImage.image?.draw(at: CGPoint.zero)
-                //let ciimage = CIImage(image: self.fullScreenImage.image!)
-                let imageSize = self.previewLayer.frame.size
                 
                 // Get the current context
                 let context = UIGraphicsGetCurrentContext()!
-                // Draw a red line
+
                 context.setLineWidth(2.0)
                 context.setStrokeColor(UIColor.blue.cgColor)
-//                context.move(to: detectedRectangle.topLeft.scaled(to:imageSize))
-//                context.addLine(to: detectedRectangle.topRight.scaled(to:imageSize))
-//                context.addLine(to: detectedRectangle.bottomRight.scaled(to:imageSize))
-//                context.addLine(to: detectedRectangle.bottomLeft.scaled(to:imageSize))
-//                context.addLine(to: detectedRectangle.topLeft.scaled(to:imageSize))
-//                context.strokePath()
                 
                 let convertedTopLeft: CGPoint = self.previewLayer.layerPointConverted(fromCaptureDevicePoint: CGPoint(x: detectedRectangle.topLeft.x, y: 1 - detectedRectangle.topLeft.y))
                 let convertedTopRight: CGPoint = self.previewLayer.layerPointConverted(fromCaptureDevicePoint: CGPoint(x: detectedRectangle.topRight.x, y: 1 - detectedRectangle.topRight.y))
                 let convertedBottomLeft: CGPoint = self.previewLayer.layerPointConverted(fromCaptureDevicePoint: CGPoint(x: detectedRectangle.bottomLeft.x, y: 1 - detectedRectangle.bottomLeft.y))
                 let convertedBottomRight: CGPoint = self.previewLayer.layerPointConverted(fromCaptureDevicePoint: CGPoint(x: detectedRectangle.bottomRight.x, y: 1 - detectedRectangle.bottomRight.y))
                 
-
-
                 context.move(to: convertedTopLeft)
                 context.addLine(to: convertedTopRight)
                 context.addLine(to: convertedBottomLeft)
@@ -157,22 +145,5 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             }
         }
         
-    }
-    
-}
-
-extension CGPoint {
-    func scaled(to size: CGSize) -> CGPoint {
-        return CGPoint(x: self.x * size.width, y: self.y * size.height)
-    }
-}
-extension CGRect {
-    func scaled(to size: CGSize) -> CGRect {
-        return CGRect(
-            x: self.origin.x * size.width,
-            y: self.origin.y * size.height,
-            width: self.size.width * size.width,
-            height: self.size.height * size.height
-        )
     }
 }
